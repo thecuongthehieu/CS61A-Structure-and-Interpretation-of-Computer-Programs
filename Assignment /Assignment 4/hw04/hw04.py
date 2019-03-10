@@ -1,4 +1,5 @@
 HW_SOURCE_FILE = 'hw04.py'
+from math import *
 
 ###############
 #  Questions  #
@@ -27,6 +28,8 @@ def taxicab(a, b):
     9
     """
     "*** YOUR CODE HERE ***"
+    return abs(street(a) - street(b)) + abs(avenue(a)- avenue(b))
+
 
 def squares(s):
     """Returns a new list containing square roots of the elements of the
@@ -40,6 +43,11 @@ def squares(s):
     []
     """
     "*** YOUR CODE HERE ***"
+    ans = []
+    for number in s:
+        if (round(sqrt(number))**2 == number):
+            ans.append(round(sqrt(number)))
+    return ans
 
 def g(n):
     """Return the value of G(n), computed recursively.
@@ -59,6 +67,10 @@ def g(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if (n <= 3):
+        return n
+    else:
+        return g(n - 1) + 2 * g(n - 2) + 3 * g(n - 3)
 
 def g_iter(n):
     """Return the value of G(n), computed iteratively.
@@ -78,6 +90,16 @@ def g_iter(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if (n <= 3):
+        return n
+    else:
+        f = (n + 1) * [0]
+        for i in range(n + 1):
+            if (i <= 3):
+                f[i] = i
+            else:
+                f[i] = f[i - 1] + 2 * f[i - 2] + 3 * f[i - 3]
+        return f[n]
 
 def pingpong(n):
     """Return the nth element of the ping-pong sequence.
@@ -111,6 +133,40 @@ def pingpong(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    def check_divided(k):
+        return k % 7 == 0
+    
+    def check_contain(k):
+        if (k == 0):
+            return False
+        elif (k % 10 == 7):
+            return True
+        else:
+            return check_contain(k // 10)
+
+
+    def checkSwitch(k):
+        if (check_divided(k) or check_contain(k)):
+            return True
+        else:
+            return False
+
+
+    def count(curr, k, flag = True):
+        if (k == n):
+            return curr
+        else:
+            if (checkSwitch(k + 1) and flag):
+                return count(curr + 1, k + 1, not flag)
+            elif (checkSwitch(k + 1) and not flag):
+                return count(curr - 1, k + 1, not flag)
+            elif (flag):
+                return count(curr + 1, k + 1, flag)
+            else:
+                return count(curr - 1, k + 1, flag)
+    
+    return count(0, 0, True)
+
 
 def has_seven(k):
     """Returns True if at least one of the digits of k is a 7, False otherwise.
@@ -148,6 +204,31 @@ def count_change(amount):
     9828
     """
     "*** YOUR CODE HERE ***"
+    k = 0
+    while (True):
+        if (2 ** (k + 1) > amount):
+            break
+        else:
+            k += 1
+
+    def _count(n):
+        f = [[0 for j in range(k + 1)] for i in range(n + 1)]
+        for i in range(n + 1):
+            for j in range(k + 1):
+                if (i == 0):
+                    f[i][j] = 1
+                elif (j == 0):
+                    f[i][j] = 1
+                else:
+                    f[i][j] = f[i][j - 1]
+
+                    if (i >= 2**j):
+                        f[i][j] += f[i - 2**j][j]
+        return f[n][k]
+
+    return _count(amount)
+
+print(count_change(7))
 
 ###################
 # Extra Questions #
@@ -164,4 +245,5 @@ def make_anonymous_factorial():
     >>> check(HW_SOURCE_FILE, 'make_anonymous_factorial', ['Assign', 'AugAssign', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    
+    return (lambda b: (lambda a, b: a(a, b))(lambda a, b: b * a(a, b - 1) if b > 0 else 1, b))
