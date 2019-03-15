@@ -50,6 +50,7 @@ class Link:
             self = self.rest
         return string + str(self.first) + '>'
 
+
 def digits(n):
     """Return the digits of n as a linked list.
 
@@ -62,6 +63,8 @@ def digits(n):
     while n > 0:
         n, last = n // 10, n % 10
         "*** YOUR CODE HERE ***"
+        new_s = Link(last, s)
+        s = new_s
     return s
 
 class VendingMachine:
@@ -169,3 +172,10 @@ class MissManners:
         if not message.startswith(magic_word):
             return 'You must learn to say please first.'
         "*** YOUR CODE HERE ***"
+        query = message[7:]
+        if (hasattr(self.obj, query)):
+            return getattr(self.obj, query)(*args)
+        else: 
+            return 'Thanks for asking, but I know not how to {0}.'.format(query)
+
+
